@@ -1,5 +1,6 @@
 package com.dyspersja.minesweeper.controller;
 
+import com.dyspersja.minesweeper.model.Difficulty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,7 +14,7 @@ public class WelcomeScreenController {
     @FXML // fx:id="widthTextField"
     private TextField widthTextField;
     @FXML // fx:id="difficultyChoiceBox"
-    private ChoiceBox<?> difficultyChoiceBox;
+    private ChoiceBox<Difficulty> difficultyChoiceBox;
     @FXML // fx:id="startGameButton"
     private Button startGameButton;
 
@@ -24,7 +25,14 @@ public class WelcomeScreenController {
 
     @FXML
     public void initialize() {
-
+        initializeDifficultyChoiceBox();
     }
+
+    private void initializeDifficultyChoiceBox() {
+        difficultyChoiceBox.getItems()
+                .addAll(Difficulty.values());
+        difficultyChoiceBox.setValue(Difficulty.INTERMEDIATE);
+    }
+
 }
 
