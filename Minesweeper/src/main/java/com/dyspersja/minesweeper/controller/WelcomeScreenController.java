@@ -48,9 +48,9 @@ public class WelcomeScreenController {
     }
 
     private TextFormatter<?> getNumberTextFormatter() {
-        return new TextFormatter<>(change ->
-                change.getText().matches("[0-9]*")
-                        ? change
+        return new TextFormatter<>(newText ->
+                newText.getControlNewText().matches("[0-9]{0,2}")
+                        ? newText
                         : null
         );
     }
