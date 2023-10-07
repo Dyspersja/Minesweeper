@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="171.0" prefWidth="328.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dyspersja.minesweeper.controller.WelcomeScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="171.0" prefWidth="328.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dyspersja.minesweeper.welcomescreen.WelcomeScreenController">
    <children>
       <Label layoutX="58.0" layoutY="20.0" text="Welcome to Minesweeper&#10;please set board dimensions and difficulty" textAlignment="CENTER" />
       <Label layoutX="176.0" layoutY="149.0" text="Made by Radosław Staniów" />

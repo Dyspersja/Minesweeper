@@ -1,4 +1,4 @@
-package com.dyspersja.minesweeper.controller;
+package com.dyspersja.minesweeper.welcomescreen;
 
 import com.dyspersja.minesweeper.model.Difficulty;
 import javafx.event.ActionEvent;
