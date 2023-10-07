@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 
 public class WelcomeScreenController {
 
@@ -26,33 +25,11 @@ public class WelcomeScreenController {
 
     @FXML
     public void initialize() {
-        initializeHeightTextField();
-        initializeWidthTextField();
-        initializeDifficultyChoiceBox();
-    }
+        var initializer = new WelcomeScreenInitializer();
 
-    private void initializeHeightTextField() {
-        heightTextField.setTextFormatter(getNumberTextFormatter());
-        heightTextField.setText("12");
-    }
-
-    private void initializeWidthTextField() {
-        widthTextField.setTextFormatter(getNumberTextFormatter());
-        widthTextField.setText("10");
-    }
-
-    private void initializeDifficultyChoiceBox() {
-        difficultyChoiceBox.getItems()
-                .addAll(Difficulty.values());
-        difficultyChoiceBox.setValue(Difficulty.INTERMEDIATE);
-    }
-
-    private TextFormatter<?> getNumberTextFormatter() {
-        return new TextFormatter<>(newText ->
-                newText.getControlNewText().matches("[0-9]{0,2}")
-                        ? newText
-                        : null
-        );
+        initializer.initializeHeightTextField(heightTextField);
+        initializer.initializeWidthTextField(widthTextField);
+        initializer.initializeDifficultyChoiceBox(difficultyChoiceBox);
     }
 
     private boolean validateUserInput() {
