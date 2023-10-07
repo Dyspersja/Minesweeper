@@ -56,30 +56,11 @@ public class WelcomeScreenController {
     }
 
     private boolean validateUserInput() {
-        return  validateHeightInput() &&
-                validateWidthInput() &&
-                validateDifficultyInput();
-    }
+        var validator = new WelcomeScreenInputValidator();
 
-    private boolean validateTextFieldInput(TextField textField, int min, int max) {
-        try {
-            int number = Integer.parseInt(textField.getText());
-            return number >= min && number < max;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private boolean validateHeightInput() {
-        return validateTextFieldInput(heightTextField, 5, 40);
-    }
-
-    private boolean validateWidthInput() {
-        return validateTextFieldInput(widthTextField, 5, 70);
-    }
-
-    private boolean validateDifficultyInput() {
-        return difficultyChoiceBox.getValue() != null;
+        return  validator.validateHeightInput(heightTextField) &&
+                validator.validateWidthInput(widthTextField) &&
+                validator.validateDifficultyInput(difficultyChoiceBox);
     }
 }
 
