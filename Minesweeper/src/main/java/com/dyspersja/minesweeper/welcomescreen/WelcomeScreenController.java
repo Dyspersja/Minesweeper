@@ -1,11 +1,17 @@
 package com.dyspersja.minesweeper.welcomescreen;
 
+import com.dyspersja.minesweeper.gamescreen.GameScreenController;
 import com.dyspersja.minesweeper.model.Difficulty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class WelcomeScreenController {
 
@@ -19,8 +25,23 @@ public class WelcomeScreenController {
     private Button startGameButton;
 
     @FXML
-    void startGame(ActionEvent event) {
-        validateUserInput();
+    void startGame(ActionEvent event) throws IOException {
+        if(!validateUserInput()) return;
+
+        // load game board scene from FXML file
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameScreen.fxml"));
+        Stage stage = (Stage) startGameButton.getScene().getWindow();
+        Scene scene = new Scene(fxmlLoader.load());
+
+        // pass user input to gameScreenController
+        GameScreenController gameScreenController = fxmlLoader.getController();
+        gameScreenController.initializeGameScreenController(
+                difficultyChoiceBox.getValue(),
+                Integer.parseInt(heightTextField.getText()),
+                Integer.parseInt(widthTextField.getText())
+        );
+
+        stage.setScene(scene);
     }
 
     @FXML

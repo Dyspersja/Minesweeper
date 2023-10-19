@@ -7,4 +7,6 @@ module com.dyspersja.minesweeper {
     exports com.dyspersja.minesweeper;
     exports com.dyspersja.minesweeper.welcomescreen;
     opens com.dyspersja.minesweeper.welcomescreen to javafx.fxml;
+    exports com.dyspersja.minesweeper.gamescreen;
+    opens com.dyspersja.minesweeper.gamescreen to javafx.fxml;
 }
