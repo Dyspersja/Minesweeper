@@ -13,12 +13,20 @@ public class GameScreenController {
     @FXML // fx:id="minefieldGridPane"
     private GridPane minefieldGridPane;
 
-    public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
-        clearGridConstraints();
+    private int bombCount;
 
+    public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
+        bombCount = calculateBombCount(difficulty, height, width);
+
+        clearGridConstraints();
         addRowConstraints(height, 20);
         addColumnConstraints(width, 20);
+
         addLabelsToGrid(width, height);
+    }
+
+    private int calculateBombCount(Difficulty difficulty, int height, int width) {
+        return (height * width) / difficulty.getBombDensityFactor() + 1;
     }
 
     private void clearGridConstraints() {
