@@ -23,6 +23,7 @@ public class GameScreenController {
         addColumnConstraints(width, 20);
 
         addLabelsToGrid(width, height);
+        applyGridPaneStyles();
     }
 
     private int calculateBombCount(Difficulty difficulty, int height, int width) {
@@ -61,13 +62,29 @@ public class GameScreenController {
     private void createLabel(int column, int row) {
         Label label = new Label();
 
-        label.setMaxWidth(Double.MAX_VALUE);
+        label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         label.setAlignment(Pos.CENTER);
 
         label.setOnMouseClicked(mouseEvent ->
                 startGame(column, row));
 
+        applyLabelStyles(label);
+        
         minefieldGridPane.add(label, column, row);
+    }
+
+    private void applyGridPaneStyles() {
+        minefieldGridPane.setStyle(
+                "-fx-border-color: #666666;"
+        );
+    }
+
+    private void applyLabelStyles(Label label) {
+        label.setStyle(
+                "-fx-background-color: #aaaaaa;" +
+                "-fx-border-color: #666666;" +
+                "-fx-border-width: 1px;"
+        );
     }
 
     private void startGame(int firstMoveColumn, int firstMoveRow) {
