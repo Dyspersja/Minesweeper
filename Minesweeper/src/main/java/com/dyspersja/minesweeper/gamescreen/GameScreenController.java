@@ -8,14 +8,18 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.Random;
+
 public class GameScreenController {
 
     @FXML // fx:id="minefieldGridPane"
     private GridPane minefieldGridPane;
 
+    private boolean[][] bombLocations;
     private int bombCount;
 
     public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
+        bombLocations = new boolean[height][width];
         bombCount = calculateBombCount(difficulty, height, width);
 
         clearGridConstraints();
@@ -88,5 +92,26 @@ public class GameScreenController {
     }
 
     private void startGame(int firstMoveColumn, int firstMoveRow) {
+        randomizeBombPlacement(firstMoveColumn, firstMoveRow);
+    }
+
+    private void randomizeBombPlacement(int firstMoveColumn, int firstMoveRow) {
+        Random random = new Random();
+
+        int bombsPlaced = 0;
+        int gridHeight = minefieldGridPane.getRowCount();
+        int gridWidth = minefieldGridPane.getColumnCount();
+
+        while (bombsPlaced < bombCount) {
+            int row, column;
+
+            do {
+                row = random.nextInt(gridHeight);
+                column = random.nextInt(gridWidth);
+            } while (bombLocations[row][column] || (row == firstMoveRow && column == firstMoveColumn));
+
+            bombLocations[row][column] = true;
+            bombsPlaced++;
+        }
     }
 }
