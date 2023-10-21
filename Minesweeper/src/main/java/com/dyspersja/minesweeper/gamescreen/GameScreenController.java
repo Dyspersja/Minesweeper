@@ -142,7 +142,41 @@ public class GameScreenController {
     }
 
     private void revealTile(Label label) {
+        int row = GridPane.getRowIndex(label);
+        int column = GridPane.getColumnIndex(label);
+
+        if(!bombLocations[row][column]) {
+            int adjacentBombCount = getAdjacentBombCount(row,column);
+            if(adjacentBombCount != 0)
+                label.setText(Integer.toString(adjacentBombCount));
+        } else label.setText("X");
+
+        revealedTiles[row][column] = true;
+
         applyLabelStylesRevealed(label);
+    }
+
+    private int getAdjacentBombCount(int row, int column) {
+        int adjacentBombs = 0;
+
+        for(int i=-1;i<=1;i++){
+            for(int j=-1;j<=1;j++){
+                if(isValidTile(row+i,column+j)) {
+                    if(bombLocations[row+i][column+j]) {
+                        adjacentBombs++;
+                    }
+                }
+            }
+        }
+
+        return adjacentBombs;
+    }
+
+    private boolean isValidTile(int row, int column) {
+        int gridHeight = minefieldGridPane.getRowCount();
+        int gridWidth = minefieldGridPane.getColumnCount();
+
+        return row >= 0 && column >= 0 && row < gridHeight && column < gridWidth;
     }
 
 }
