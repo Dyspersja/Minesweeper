@@ -3,6 +3,7 @@ package com.dyspersja.minesweeper.gamescreen;
 import com.dyspersja.minesweeper.model.Difficulty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -15,10 +16,12 @@ public class GameScreenController {
     @FXML // fx:id="minefieldGridPane"
     private GridPane minefieldGridPane;
 
+    private boolean[][] revealedTiles;
     private boolean[][] bombLocations;
     private int bombCount;
 
     public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
+        revealedTiles = new boolean[height][width];
         bombLocations = new boolean[height][width];
         bombCount = calculateBombCount(difficulty, height, width);
 
@@ -69,10 +72,12 @@ public class GameScreenController {
         label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         label.setAlignment(Pos.CENTER);
 
-        label.setOnMouseClicked(mouseEvent ->
-                startGame(column, row));
+        label.setOnMouseClicked(mouseEvent -> {
+                    startGame(column, row);
+                    revealTile(label);
+                });
 
-        applyLabelStyles(label);
+        applyLabelStylesHidden(label);
         
         minefieldGridPane.add(label, column, row);
     }
@@ -83,7 +88,7 @@ public class GameScreenController {
         );
     }
 
-    private void applyLabelStyles(Label label) {
+    private void applyLabelStylesHidden(Label label) {
         label.setStyle(
                 "-fx-background-color: #aaaaaa;" +
                 "-fx-border-color: #666666;" +
@@ -91,8 +96,18 @@ public class GameScreenController {
         );
     }
 
+    private void applyLabelStylesRevealed(Label label) {
+        label.setStyle(
+                "-fx-font-weight: bold;" +
+                "-fx-background-color: #eeeeee;" +
+                "-fx-border-color: #666666;" +
+                "-fx-border-width: 1px;"
+        );
+    }
+
     private void startGame(int firstMoveColumn, int firstMoveRow) {
         randomizeBombPlacement(firstMoveColumn, firstMoveRow);
+        updateTilesOnMouseClickAction();
     }
 
     private void randomizeBombPlacement(int firstMoveColumn, int firstMoveRow) {
@@ -114,4 +129,20 @@ public class GameScreenController {
             bombsPlaced++;
         }
     }
+
+    private void updateTilesOnMouseClickAction() {
+        for (Node node : minefieldGridPane.getChildren()) {
+            if (node instanceof Label label) {
+                label.setOnMouseClicked(mouseEvent -> {
+                    label.setOnMouseClicked(null);
+                    revealTile(label);
+                });
+            }
+        }
+    }
+
+    private void revealTile(Label label) {
+        applyLabelStylesRevealed(label);
+    }
+
 }
