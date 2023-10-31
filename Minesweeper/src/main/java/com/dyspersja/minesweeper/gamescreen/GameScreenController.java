@@ -74,7 +74,7 @@ public class GameScreenController {
 
         label.setOnMouseClicked(mouseEvent -> {
                     startGame(column, row);
-                    revealTile(label);
+                    onTileClicked(label);
                 });
 
         applyLabelStylesHidden(label);
@@ -144,39 +144,64 @@ public class GameScreenController {
             if (node instanceof Label label) {
                 label.setOnMouseClicked(mouseEvent -> {
                     label.setOnMouseClicked(null);
-                    revealTile(label);
+                    onTileClicked(label);
                 });
             }
         }
     }
 
-    private void revealTile(Label label) {
+    private void onTileClicked(Label label) {
         int row = GridPane.getRowIndex(label);
         int column = GridPane.getColumnIndex(label);
 
         if(!bombLocations[row][column]) {
-            int adjacentBombCount = getAdjacentBombCount(row,column);
-            if(adjacentBombCount != 0)
-                label.setText(Integer.toString(adjacentBombCount));
             revealedTiles[row][column] = true;
-            applyLabelStylesRevealed(label);
-        } else revealAllBombTiles(row,column);
+
+            int adjacentBombCount = getAdjacentBombCount(row,column);
+            if (adjacentBombCount != 0) revealTile(label, adjacentBombCount);
+            else revealAdjacentTiles(label, row, column);
+        } else revealAllBombTiles(label);
     }
 
-    private void revealAllBombTiles(int row, int column) {
+    private void revealTile(Label label, int adjacentBombCount) {
+        label.setText(Integer.toString(adjacentBombCount));
+        applyLabelStylesRevealed(label);
+    }
+
+    private void revealAdjacentTiles(Label label, int row, int column) {
+        applyLabelStylesRevealed(label);
+
         for (Node node : minefieldGridPane.getChildren()) {
-            if (node instanceof Label label) {
+            if (node instanceof Label tileLabel) {
                 int r = GridPane.getRowIndex(node);
                 int c = GridPane.getColumnIndex(node);
-                if (bombLocations[r][c]) {
-                    label.setText("X");
-                    String color = r == row && c == column
-                            ? "red"
-                            : "yellow";
-                    applyLabelStylesBomb(label,color);
+                if (r >= row - 1 && r <= row + 1) {
+                    if (c >= column - 1 && c <= column + 1) {
+                        if (!revealedTiles[r][c]) {
+                            revealedTiles[r][c] = true;
+
+                            int adjacentBombCount = getAdjacentBombCount(r,c);
+                            if (adjacentBombCount != 0) revealTile(tileLabel, adjacentBombCount);
+                            else revealAdjacentTiles(tileLabel, r, c);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private void revealAllBombTiles(Label label) {
+        for (Node node : minefieldGridPane.getChildren()) {
+            if (node instanceof Label tileLabel) {
+                int r = GridPane.getRowIndex(node);
+                int c = GridPane.getColumnIndex(node);
+                if (bombLocations[r][c]) {
+                    tileLabel.setText("X");
+                    applyLabelStylesBomb(tileLabel,"yellow");
+                }
+            }
+        }
+        applyLabelStylesBomb(label,"red");
     }
 
     private int getAdjacentBombCount(int row, int column) {
