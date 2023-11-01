@@ -39,23 +39,15 @@ public class GameScreenController {
             for (int row = 0; row < gridHeight; row++) {
                 Tile tile = new Tile();
 
-                tiles[row][column] = tile;
-                minefieldGridPane.add(tile, column, row);
-                setInitialOnMouseClickAction(tile);
-            }
-        }
-    }
-
-    private void setInitialOnMouseClickAction(Tile tile) {
-        tile.setOnMouseClicked(mouseEvent -> {
-                    startGame(tile);
+                tile.setOnMouseClicked(mouseEvent -> {
+                    randomizeBombPlacement(tile);
+                    updateTilesOnMouseClickAction();
                     onTileClicked(tile);
                 });
-    }
-
-    private void startGame(Tile tile) {
-        randomizeBombPlacement(tile);
-        updateTilesOnMouseClickAction();
+                tiles[row][column] = tile;
+                minefieldGridPane.add(tile, column, row);
+            }
+        }
     }
 
     private void randomizeBombPlacement(Tile tile) {
@@ -68,8 +60,16 @@ public class GameScreenController {
 
             if (tiles[row][column].isBomb() || tiles[row][column] == tile) continue;
             tiles[row][column].setBomb(true);
+            incrementAdjacentBombCount(row,column);
             bombCount--;
         }
+    }
+
+    private void incrementAdjacentBombCount(int row, int column) {
+        for (int i = -1; i <= 1; i++)
+            for (int j = -1; j <= 1; j++)
+                if (isValidTile(row+i, column+j))
+                    tiles[row+i][column+j].incrementAdjacentBombs();
     }
 
     private void updateTilesOnMouseClickAction() {
@@ -80,32 +80,25 @@ public class GameScreenController {
     }
 
     private void onTileClicked(Tile tile) {
-        int row = GridPane.getRowIndex(tile);
-        int column = GridPane.getColumnIndex(tile);
-
         if(!tile.isBomb()) {
-            tile.setRevealed(true);
-
-            int adjacentBombCount = getAdjacentBombCount(row,column);
-            if (adjacentBombCount != 0)
-                tile.reveal(Integer.toString(adjacentBombCount), "#eeeeee");
-            else revealAdjacentTiles(tile, row, column);
+            if (tile.getAdjacentBombs() != 0)
+                tile.reveal("#eeeeee");
+            else revealAdjacentTiles(tile);
         } else revealAllBombTiles(tile);
     }
 
-    private void revealAdjacentTiles(Tile tile, int row, int column) {
-        tile.reveal("", "#eeeeee");
+    private void revealAdjacentTiles(Tile tile) {
+        tile.reveal("#eeeeee");
+        int row = GridPane.getRowIndex(tile);
+        int column = GridPane.getColumnIndex(tile);
 
         for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++)
                 if (isValidTile(row+i, column+j))
                     if (!tiles[row+i][column+j].isRevealed()) {
-                        tiles[row+i][column+j].setRevealed(true);
-
-                        int adjacentBombCount = getAdjacentBombCount(row+i,column+j);
-                        if (adjacentBombCount != 0)
-                            tiles[row+i][column+j].reveal(Integer.toString(adjacentBombCount), "#eeeeee");
-                        else revealAdjacentTiles(tiles[row+i][column+j], row+i, column+j);
+                        if (tiles[row+i][column+j].getAdjacentBombs() != 0)
+                            tiles[row+i][column+j].reveal("#eeeeee");
+                        else revealAdjacentTiles(tiles[row+i][column+j]);
                     }
     }
 
@@ -113,21 +106,9 @@ public class GameScreenController {
         for (Tile[] rows : tiles)
             for (Tile currentTile : rows)
                 if (currentTile.isBomb())
-                    currentTile.reveal("X", "yellow");
+                    currentTile.reveal("yellow");
 
-        tile.reveal("X", "red");
-    }
-
-    private int getAdjacentBombCount(int row, int column) {
-        int adjacentBombs = 0;
-
-        for (int i = -1; i <= 1; i++)
-            for (int j = -1; j <= 1; j++)
-                if (isValidTile(row+i, column+j))
-                    if (tiles[row+i][column+j].isBomb())
-                        adjacentBombs++;
-
-        return adjacentBombs;
+        tile.reveal("red");
     }
 
     private boolean isValidTile(int row, int column) {

@@ -4,8 +4,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 
 public class Tile extends Label {
-    boolean isRevealed;
-    boolean isBomb;
+    private boolean isRevealed;
+    private boolean isBomb;
+    private int adjacentBombs;
 
     public Tile() {
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -22,16 +23,25 @@ public class Tile extends Label {
         return this.isBomb;
     }
 
-    public void setRevealed(boolean revealed) {
-        this.isRevealed = revealed;
+    public int getAdjacentBombs() {
+        return this.adjacentBombs;
     }
 
     public void setBomb(boolean bomb) {
         this.isBomb = bomb;
     }
 
-    public void reveal(String symbol, String color) {
-        this.setText(symbol);
+    public void incrementAdjacentBombs() {
+        this.adjacentBombs += 1;
+    }
+
+    public void reveal(String color) {
+        this.isRevealed = true;
+
+        if (this.isBomb) this.setText("X");
+        else if (this.adjacentBombs != 0)
+            this.setText(Integer.toString(this.adjacentBombs));
+
         this.applyStyle(color);
         this.removeOnMouseClickAction();
     }
