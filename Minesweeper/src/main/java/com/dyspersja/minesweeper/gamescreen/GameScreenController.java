@@ -120,10 +120,6 @@ public class GameScreenController {
         }
     }
 
-    private void removeTilesOnMouseClickAction(Tile tile) {
-        tile.setOnMouseClicked(null);
-    }
-
     private void onTileClicked(Tile tile) {
         int row = GridPane.getRowIndex(tile);
         int column = GridPane.getColumnIndex(tile);
@@ -133,19 +129,13 @@ public class GameScreenController {
 
             int adjacentBombCount = getAdjacentBombCount(row,column);
             if (adjacentBombCount != 0)
-                revealTile(tile, Integer.toString(adjacentBombCount), "#eeeeee");
+                tile.reveal(Integer.toString(adjacentBombCount), "#eeeeee");
             else revealAdjacentTiles(tile, row, column);
         } else revealAllBombTiles(tile);
     }
 
-    private void revealTile(Tile tile, String symbol, String color) {
-        tile.setText(symbol);
-        tile.applyStyle(color);
-        removeTilesOnMouseClickAction(tile);
-    }
-
     private void revealAdjacentTiles(Tile tile, int row, int column) {
-        revealTile(tile, "", "#eeeeee");
+        tile.reveal("", "#eeeeee");
 
         for (Node node : minefieldGridPane.getChildren()) {
             if (node instanceof Tile currentTile) {
@@ -158,7 +148,7 @@ public class GameScreenController {
 
                             int adjacentBombCount = getAdjacentBombCount(r,c);
                             if (adjacentBombCount != 0)
-                                revealTile(currentTile, Integer.toString(adjacentBombCount), "#eeeeee");
+                                currentTile.reveal(Integer.toString(adjacentBombCount), "#eeeeee");
                             else revealAdjacentTiles(currentTile, r, c);
                         }
                     }
@@ -172,10 +162,10 @@ public class GameScreenController {
             if (node instanceof Tile currentTile) {
                 int r = GridPane.getRowIndex(node);
                 int c = GridPane.getColumnIndex(node);
-                if (bombLocations[r][c]) revealTile(currentTile, "X", "yellow");
+                if (bombLocations[r][c]) currentTile.reveal("X", "yellow");
             }
         }
-        revealTile(tile, "X", "red");
+        tile.reveal("X", "red");
     }
 
     private int getAdjacentBombCount(int row, int column) {

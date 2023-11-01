@@ -5,16 +5,26 @@ import javafx.scene.control.Label;
 
 public class Tile extends Label {
     public Tile() {
-        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        setAlignment(Pos.CENTER);
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        this.setAlignment(Pos.CENTER);
+    }
+
+    public void reveal(String symbol, String color) {
+        this.setText(symbol);
+        this.applyStyle(color);
+        this.removeOnMouseClickAction();
     }
 
     public void applyStyle(String color) {
-        setStyle(
+        this.setStyle(
                 "-fx-font-weight: bold;" +
                 "-fx-background-color: " + color + ";" +
                 "-fx-border-color: #666666;" +
                 "-fx-border-width: 1px;"
         );
+    }
+
+    private void removeOnMouseClickAction() {
+        this.setOnMouseClicked(null);
     }
 }
