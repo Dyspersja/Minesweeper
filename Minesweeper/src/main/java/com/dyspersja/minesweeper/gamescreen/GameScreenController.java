@@ -19,15 +19,14 @@ public class GameScreenController {
     private int bombCount;
 
     public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
-        tiles = new Tile[height][width];
         bombCount = calculateBombCount(difficulty, height, width);
 
         clearGridConstraints();
         addRowConstraints(height);
         addColumnConstraints(width);
 
-        addTilesToGrid(width, height);
         applyGridPaneStyles();
+        addTilesToGrid(width, height);
     }
 
     private int calculateBombCount(Difficulty difficulty, int height, int width) {
@@ -56,6 +55,8 @@ public class GameScreenController {
     }
 
     private void addTilesToGrid(int width, int height) {
+        tiles = new Tile[height][width];
+
         for (int column = 0; column < width; column++) {
             for (int row = 0; row < height; row++) {
                 Tile tile = new Tile();
