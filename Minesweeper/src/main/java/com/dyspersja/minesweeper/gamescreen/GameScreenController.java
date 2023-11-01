@@ -2,6 +2,7 @@ package com.dyspersja.minesweeper.gamescreen;
 
 import com.dyspersja.minesweeper.model.Difficulty;
 import com.dyspersja.minesweeper.model.Tile;
+import com.dyspersja.minesweeper.model.TileStyle;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
@@ -83,11 +84,11 @@ public class GameScreenController {
         if (tile.isBomb()) onGameLost(tile);
         else if (tile.getAdjacentBombs() == 0)
             revealAdjacentTiles(tile);
-        else tile.reveal("#eeeeee");
+        else tile.reveal(TileStyle.REVEALED);
     }
 
     private void revealAdjacentTiles(Tile tile) {
-        tile.reveal("#eeeeee");
+        tile.reveal(TileStyle.REVEALED);
         int row = GridPane.getRowIndex(tile);
         int column = GridPane.getColumnIndex(tile);
 
@@ -96,7 +97,7 @@ public class GameScreenController {
                 if (isValidTile(row+i, column+j))
                     if (!tiles[row+i][column+j].isRevealed()) {
                         if (tiles[row+i][column+j].getAdjacentBombs() != 0)
-                            tiles[row+i][column+j].reveal("#eeeeee");
+                            tiles[row+i][column+j].reveal(TileStyle.REVEALED);
                         else revealAdjacentTiles(tiles[row+i][column+j]);
                     }
     }
@@ -105,16 +106,16 @@ public class GameScreenController {
         for (Tile[] rows : tiles)
             for (Tile currentTile : rows)
                 if (currentTile.isBomb())
-                    currentTile.reveal("green");
+                    currentTile.reveal(TileStyle.BOMB_WON);
     }
 
     private void onGameLost(Tile tile) {
         for (Tile[] rows : tiles)
             for (Tile currentTile : rows)
                 if (currentTile.isBomb())
-                    currentTile.reveal("yellow");
+                    currentTile.reveal(TileStyle.BOMB_LOST);
 
-        tile.reveal("red");
+        tile.reveal(TileStyle.BOMB_LOST_STRUCK);
     }
 
     private boolean isValidTile(int row, int column) {
