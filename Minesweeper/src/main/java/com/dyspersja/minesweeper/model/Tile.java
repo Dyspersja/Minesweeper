@@ -4,11 +4,30 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 
 public class Tile extends Label {
+    boolean isRevealed;
+    boolean isBomb;
+
     public Tile() {
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.setAlignment(Pos.CENTER);
 
         this.applyStyle("#aaaaaa");
+    }
+
+    public boolean isRevealed() {
+        return isRevealed;
+    }
+
+    public boolean isBomb() {
+        return isBomb;
+    }
+
+    public void setRevealed(boolean revealed) {
+        isRevealed = revealed;
+    }
+
+    public void setBomb(boolean bomb) {
+        isBomb = bomb;
     }
 
     public void reveal(String symbol, String color) {
