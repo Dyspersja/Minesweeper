@@ -3,9 +3,7 @@ package com.dyspersja.minesweeper.gamescreen;
 import com.dyspersja.minesweeper.model.Difficulty;
 import com.dyspersja.minesweeper.model.Tile;
 import javafx.fxml.FXML;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 
 import java.util.Random;
 
@@ -24,40 +22,21 @@ public class GameScreenController {
         this.gridHeight = height;
         this.gridWidth = width;
 
-        clearGridConstraints();
-        addRowConstraints(height);
-        addColumnConstraints(width);
+        var initializer = new GameScreenControllerInitializer();
 
-        applyGridPaneStyles();
-        addTilesToGrid(width, height);
+        initializer.clearGridConstraints(minefieldGridPane);
+        initializer.addRowConstraints(minefieldGridPane, gridHeight);
+        initializer.addColumnConstraints(minefieldGridPane, gridWidth);
+        initializer.applyGridPaneStyles(minefieldGridPane);
+
+        addTilesToGrid();
     }
 
-    private void clearGridConstraints() {
-        minefieldGridPane.getRowConstraints().clear();
-        minefieldGridPane.getColumnConstraints().clear();
-    }
+    private void addTilesToGrid() {
+        tiles = new Tile[gridHeight][gridWidth];
 
-    private void addRowConstraints(int count) {
-        RowConstraints row = new RowConstraints();
-        row.setMinHeight(20);
-        for (int i = 0; i < count; i++) {
-            minefieldGridPane.getRowConstraints().add(row);
-        }
-    }
-
-    private void addColumnConstraints(int count) {
-        ColumnConstraints column = new ColumnConstraints();
-        column.setMinWidth(20);
-        for (int i = 0; i < count; i++) {
-            minefieldGridPane.getColumnConstraints().add(column);
-        }
-    }
-
-    private void addTilesToGrid(int width, int height) {
-        tiles = new Tile[height][width];
-
-        for (int column = 0; column < width; column++) {
-            for (int row = 0; row < height; row++) {
+        for (int column = 0; column < gridWidth; column++) {
+            for (int row = 0; row < gridHeight; row++) {
                 Tile tile = new Tile();
 
                 tiles[row][column] = tile;
@@ -72,12 +51,6 @@ public class GameScreenController {
                     startGame(tile);
                     onTileClicked(tile);
                 });
-    }
-
-    private void applyGridPaneStyles() {
-        minefieldGridPane.setStyle(
-                "-fx-border-color: #666666;"
-        );
     }
 
     private void startGame(Tile tile) {
