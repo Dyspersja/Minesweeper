@@ -73,7 +73,7 @@ public class GameScreenController {
                     onTileClicked(tile);
                 });
 
-        applyTileStyle(tile, "#aaaaaa");
+        tile.applyStyle("#aaaaaa");
         
         minefieldGridPane.add(tile, column, row);
     }
@@ -81,15 +81,6 @@ public class GameScreenController {
     private void applyGridPaneStyles() {
         minefieldGridPane.setStyle(
                 "-fx-border-color: #666666;"
-        );
-    }
-
-    private void applyTileStyle(Tile tile, String color) {
-        tile.setStyle(
-                "-fx-font-weight: bold;" +
-                "-fx-background-color: " + color + ";" +
-                "-fx-border-color: #666666;" +
-                "-fx-border-width: 1px;"
         );
     }
 
@@ -149,7 +140,7 @@ public class GameScreenController {
 
     private void revealTile(Tile tile, String symbol, String color) {
         tile.setText(symbol);
-        applyTileStyle(tile, color);
+        tile.applyStyle(color);
         removeTilesOnMouseClickAction(tile);
     }
 
