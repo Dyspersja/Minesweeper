@@ -23,17 +23,17 @@ public class GameScreenController {
         this.gridHeight = height;
         this.gridWidth = width;
 
-        var initializer = new GameScreenControllerInitializer();
+        var initializer = new GameScreenInitializer(minefieldGridPane);
 
-        initializer.clearGridConstraints(minefieldGridPane);
-        initializer.addRowConstraints(minefieldGridPane, gridHeight);
-        initializer.addColumnConstraints(minefieldGridPane, gridWidth);
-        initializer.applyGridPaneStyles(minefieldGridPane);
+        initializer.clearGridConstraints();
+        initializer.addRowConstraints(gridHeight);
+        initializer.addColumnConstraints(gridWidth);
+        initializer.applyGridPaneStyles();
 
-        addTilesToGrid();
+        initializeTileGrid();
     }
 
-    private void addTilesToGrid() {
+    private void initializeTileGrid() {
         tiles = new Tile[gridHeight][gridWidth];
 
         for (int column = 0; column < gridWidth; column++) {
@@ -41,17 +41,18 @@ public class GameScreenController {
                 Tile tile = new Tile();
 
                 tile.setOnMouseClicked(mouseEvent -> {
-                    randomizeBombPlacement(tile);
-                    updateTilesOnMouseClickAction();
+                    initializeBombLocations(tile);
+                    reassignTilesClickEvent();
                     onTileClicked(tile);
                 });
+
                 tiles[row][column] = tile;
                 minefieldGridPane.add(tile, column, row);
             }
         }
     }
 
-    private void randomizeBombPlacement(Tile tile) {
+    private void initializeBombLocations(Tile tile) {
         int bombCount = (gridHeight * gridWidth) / difficulty.getBombDensityFactor() + 1;
         Random random = new Random();
 
@@ -73,7 +74,11 @@ public class GameScreenController {
                     tiles[row+i][column+j].incrementAdjacentBombs();
     }
 
-    private void updateTilesOnMouseClickAction() {
+    private boolean isValidTile(int row, int column) {
+        return row >= 0 && column >= 0 && row < gridHeight && column < gridWidth;
+    }
+
+    private void reassignTilesClickEvent() {
         for (Tile[] rows : tiles)
             for (Tile tile : rows)
                 tile.setOnMouseClicked(mouseEvent ->
@@ -82,24 +87,24 @@ public class GameScreenController {
 
     private void onTileClicked(Tile tile) {
         if (tile.isBomb()) onGameLost(tile);
-        else if (tile.getAdjacentBombs() == 0)
+        else revealTile(tile);
+    }
+
+    private void revealTile(Tile tile) {
+        tile.reveal(TileStyle.REVEALED);
+        if (tile.getAdjacentBombs() == 0)
             revealAdjacentTiles(tile);
-        else tile.reveal(TileStyle.REVEALED);
     }
 
     private void revealAdjacentTiles(Tile tile) {
-        tile.reveal(TileStyle.REVEALED);
         int row = GridPane.getRowIndex(tile);
         int column = GridPane.getColumnIndex(tile);
 
         for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++)
                 if (isValidTile(row+i, column+j))
-                    if (!tiles[row+i][column+j].isRevealed()) {
-                        if (tiles[row+i][column+j].getAdjacentBombs() != 0)
-                            tiles[row+i][column+j].reveal(TileStyle.REVEALED);
-                        else revealAdjacentTiles(tiles[row+i][column+j]);
-                    }
+                    if (!tiles[row+i][column+j].isRevealed())
+                        revealTile(tiles[row+i][column+j]);
     }
 
     private void onGameWon() {
@@ -117,9 +122,4 @@ public class GameScreenController {
 
         tile.reveal(TileStyle.BOMB_LOST_STRUCK);
     }
-
-    private boolean isValidTile(int row, int column) {
-        return row >= 0 && column >= 0 && row < gridHeight && column < gridWidth;
-    }
-
 }
