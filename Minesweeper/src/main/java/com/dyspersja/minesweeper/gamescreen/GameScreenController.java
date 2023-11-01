@@ -3,7 +3,6 @@ package com.dyspersja.minesweeper.gamescreen;
 import com.dyspersja.minesweeper.model.Difficulty;
 import com.dyspersja.minesweeper.model.Tile;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -16,10 +15,14 @@ public class GameScreenController {
     private GridPane minefieldGridPane;
 
     private Tile[][] tiles;
-    private int bombCount;
+    private Difficulty difficulty;
+    private int gridHeight;
+    private int gridWidth;
 
     public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
-        bombCount = calculateBombCount(difficulty, height, width);
+        this.difficulty = difficulty;
+        this.gridHeight = height;
+        this.gridWidth = width;
 
         clearGridConstraints();
         addRowConstraints(height);
@@ -27,10 +30,6 @@ public class GameScreenController {
 
         applyGridPaneStyles();
         addTilesToGrid(width, height);
-    }
-
-    private int calculateBombCount(Difficulty difficulty, int height, int width) {
-        return (height * width) / difficulty.getBombDensityFactor() + 1;
     }
 
     private void clearGridConstraints() {
@@ -63,14 +62,14 @@ public class GameScreenController {
 
                 tiles[row][column] = tile;
                 minefieldGridPane.add(tile, column, row);
-                setInitialOnMouseClickAction(tile, column, row);
+                setInitialOnMouseClickAction(tile);
             }
         }
     }
 
-    private void setInitialOnMouseClickAction(Tile tile, int column, int row) {
+    private void setInitialOnMouseClickAction(Tile tile) {
         tile.setOnMouseClicked(mouseEvent -> {
-                    startGame(column, row);
+                    startGame(tile);
                     onTileClicked(tile);
                 });
     }
@@ -81,28 +80,22 @@ public class GameScreenController {
         );
     }
 
-    private void startGame(int firstMoveColumn, int firstMoveRow) {
-        randomizeBombPlacement(firstMoveColumn, firstMoveRow);
+    private void startGame(Tile tile) {
+        randomizeBombPlacement(tile);
         updateTilesOnMouseClickAction();
     }
 
-    private void randomizeBombPlacement(int firstMoveColumn, int firstMoveRow) {
+    private void randomizeBombPlacement(Tile tile) {
+        int bombCount = (gridHeight * gridWidth) / difficulty.getBombDensityFactor() + 1;
         Random random = new Random();
 
-        int bombsPlaced = 0;
-        int gridHeight = minefieldGridPane.getRowCount();
-        int gridWidth = minefieldGridPane.getColumnCount();
+        while (bombCount > 0) {
+            int row = random.nextInt(gridHeight);
+            int column = random.nextInt(gridWidth);
 
-        while (bombsPlaced < bombCount) {
-            int row, column;
-
-            do {
-                row = random.nextInt(gridHeight);
-                column = random.nextInt(gridWidth);
-            } while (tiles[row][column].isBomb() || (row == firstMoveRow && column == firstMoveColumn));
-
+            if (tiles[row][column].isBomb() || tiles[row][column] == tile) continue;
             tiles[row][column].setBomb(true);
-            bombsPlaced++;
+            bombCount--;
         }
     }
 
@@ -128,7 +121,7 @@ public class GameScreenController {
     }
 
     private void revealAdjacentTiles(Tile tile, int row, int column) {
-        tiles[row][column].reveal("", "#eeeeee");
+        tile.reveal("", "#eeeeee");
 
         for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++)
@@ -165,9 +158,6 @@ public class GameScreenController {
     }
 
     private boolean isValidTile(int row, int column) {
-        int gridHeight = minefieldGridPane.getRowCount();
-        int gridWidth = minefieldGridPane.getColumnCount();
-
         return row >= 0 && column >= 0 && row < gridHeight && column < gridWidth;
     }
 

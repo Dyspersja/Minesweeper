@@ -15,19 +15,19 @@ public class Tile extends Label {
     }
 
     public boolean isRevealed() {
-        return isRevealed;
+        return this.isRevealed;
     }
 
     public boolean isBomb() {
-        return isBomb;
+        return this.isBomb;
     }
 
     public void setRevealed(boolean revealed) {
-        isRevealed = revealed;
+        this.isRevealed = revealed;
     }
 
     public void setBomb(boolean bomb) {
-        isBomb = bomb;
+        this.isBomb = bomb;
     }
 
     public void reveal(String symbol, String color) {
