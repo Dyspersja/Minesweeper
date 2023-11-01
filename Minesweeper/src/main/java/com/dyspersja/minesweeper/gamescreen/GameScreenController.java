@@ -3,7 +3,6 @@ package com.dyspersja.minesweeper.gamescreen;
 import com.dyspersja.minesweeper.model.Difficulty;
 import com.dyspersja.minesweeper.model.Tile;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -68,9 +67,6 @@ public class GameScreenController {
 
     private void createTile(int column, int row) {
         Tile tile = new Tile();
-
-        tile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        tile.setAlignment(Pos.CENTER);
 
         tile.setOnMouseClicked(mouseEvent -> {
                     startGame(column, row);
