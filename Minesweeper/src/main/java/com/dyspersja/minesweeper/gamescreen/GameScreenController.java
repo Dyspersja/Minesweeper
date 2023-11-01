@@ -23,8 +23,8 @@ public class GameScreenController {
         bombCount = calculateBombCount(difficulty, height, width);
 
         clearGridConstraints();
-        addRowConstraints(height, 20);
-        addColumnConstraints(width, 20);
+        addRowConstraints(height);
+        addColumnConstraints(width);
 
         addTilesToGrid(width, height);
         applyGridPaneStyles();
@@ -39,17 +39,17 @@ public class GameScreenController {
         minefieldGridPane.getColumnConstraints().clear();
     }
 
-    private void addRowConstraints(int count, double minHeight) {
+    private void addRowConstraints(int count) {
         RowConstraints row = new RowConstraints();
-        row.setMinHeight(minHeight);
+        row.setMinHeight(20);
         for (int i = 0; i < count; i++) {
             minefieldGridPane.getRowConstraints().add(row);
         }
     }
 
-    private void addColumnConstraints(int count, double minWidth) {
+    private void addColumnConstraints(int count) {
         ColumnConstraints column = new ColumnConstraints();
-        column.setMinWidth(minWidth);
+        column.setMinWidth(20);
         for (int i = 0; i < count; i++) {
             minefieldGridPane.getColumnConstraints().add(column);
         }
