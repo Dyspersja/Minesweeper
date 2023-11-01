@@ -15,13 +15,11 @@ public class GameScreenController {
     @FXML // fx:id="minefieldGridPane"
     private GridPane minefieldGridPane;
 
-    private boolean[][] revealedTiles;
-    private boolean[][] bombLocations;
+    private Tile[][] tiles;
     private int bombCount;
 
     public void initializeGameScreenController(Difficulty difficulty, int height, int width) {
-        revealedTiles = new boolean[height][width];
-        bombLocations = new boolean[height][width];
+        tiles = new Tile[height][width];
         bombCount = calculateBombCount(difficulty, height, width);
 
         clearGridConstraints();
@@ -60,20 +58,20 @@ public class GameScreenController {
     private void addTilesToGrid(int width, int height) {
         for (int column = 0; column < width; column++) {
             for (int row = 0; row < height; row++) {
-                createTile(column, row);
+                Tile tile = new Tile();
+
+                tiles[row][column] = tile;
+                minefieldGridPane.add(tile, column, row);
+                setInitialOnMouseClickAction(tile, column, row);
             }
         }
     }
 
-    private void createTile(int column, int row) {
-        Tile tile = new Tile();
-
+    private void setInitialOnMouseClickAction(Tile tile, int column, int row) {
         tile.setOnMouseClicked(mouseEvent -> {
                     startGame(column, row);
                     onTileClicked(tile);
                 });
-        
-        minefieldGridPane.add(tile, column, row);
     }
 
     private void applyGridPaneStyles() {
@@ -100,9 +98,9 @@ public class GameScreenController {
             do {
                 row = random.nextInt(gridHeight);
                 column = random.nextInt(gridWidth);
-            } while (bombLocations[row][column] || (row == firstMoveRow && column == firstMoveColumn));
+            } while (tiles[row][column].isBomb() || (row == firstMoveRow && column == firstMoveColumn));
 
-            bombLocations[row][column] = true;
+            tiles[row][column].setBomb(true);
             bombsPlaced++;
         }
     }
@@ -122,8 +120,8 @@ public class GameScreenController {
         int row = GridPane.getRowIndex(tile);
         int column = GridPane.getColumnIndex(tile);
 
-        if(!bombLocations[row][column]) {
-            revealedTiles[row][column] = true;
+        if(!tiles[row][column].isBomb()) {
+            tiles[row][column].setRevealed(true);
 
             int adjacentBombCount = getAdjacentBombCount(row,column);
             if (adjacentBombCount != 0)
@@ -141,8 +139,8 @@ public class GameScreenController {
                 int c = GridPane.getColumnIndex(node);
                 if (r >= row - 1 && r <= row + 1) {
                     if (c >= column - 1 && c <= column + 1) {
-                        if (!revealedTiles[r][c]) {
-                            revealedTiles[r][c] = true;
+                        if (!tiles[r][c].isRevealed()) {
+                            tiles[r][c].setRevealed(true);
 
                             int adjacentBombCount = getAdjacentBombCount(r,c);
                             if (adjacentBombCount != 0)
@@ -160,7 +158,7 @@ public class GameScreenController {
             if (node instanceof Tile currentTile) {
                 int r = GridPane.getRowIndex(node);
                 int c = GridPane.getColumnIndex(node);
-                if (bombLocations[r][c]) currentTile.reveal("X", "yellow");
+                if (tiles[r][c].isBomb()) currentTile.reveal("X", "yellow");
             }
         }
         tile.reveal("X", "red");
@@ -172,7 +170,7 @@ public class GameScreenController {
         for(int i=-1;i<=1;i++){
             for(int j=-1;j<=1;j++){
                 if(isValidTile(row+i,column+j)) {
-                    if(bombLocations[row+i][column+j]) {
+                    if(tiles[row+i][column+j].isBomb()) {
                         adjacentBombs++;
                     }
                 }
