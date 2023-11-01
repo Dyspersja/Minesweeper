@@ -72,8 +72,6 @@ public class GameScreenController {
                     startGame(column, row);
                     onTileClicked(tile);
                 });
-
-        tile.applyStyle("#aaaaaa");
         
         minefieldGridPane.add(tile, column, row);
     }

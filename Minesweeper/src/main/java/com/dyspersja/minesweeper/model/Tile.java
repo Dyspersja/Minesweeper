@@ -7,6 +7,8 @@ public class Tile extends Label {
     public Tile() {
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.setAlignment(Pos.CENTER);
+
+        this.applyStyle("#aaaaaa");
     }
 
     public void reveal(String symbol, String color) {
@@ -15,7 +17,7 @@ public class Tile extends Label {
         this.removeOnMouseClickAction();
     }
 
-    public void applyStyle(String color) {
+    private void applyStyle(String color) {
         this.setStyle(
                 "-fx-font-weight: bold;" +
                 "-fx-background-color: " + color + ";" +
