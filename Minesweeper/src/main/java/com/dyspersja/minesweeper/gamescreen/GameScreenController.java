@@ -40,16 +40,20 @@ public class GameScreenController {
             for (int row = 0; row < gridHeight; row++) {
                 Tile tile = new Tile();
 
-                tile.setOnMouseClicked(mouseEvent -> {
-                    initializeBombLocations(tile);
-                    reassignTilesClickEvent();
-                    onTileClicked(tile);
-                });
+                assignInitialTileClickEvent(tile);
 
                 tiles[row][column] = tile;
                 minefieldGridPane.add(tile, column, row);
             }
         }
+    }
+
+    private void assignInitialTileClickEvent(Tile tile) {
+        tile.setOnMouseClicked(mouseEvent -> {
+            initializeBombLocations(tile);
+            reassignTileClickEvent();
+            onTileClicked(tile);
+        });
     }
 
     private void initializeBombLocations(Tile tile) {
@@ -78,7 +82,7 @@ public class GameScreenController {
         return row >= 0 && column >= 0 && row < gridHeight && column < gridWidth;
     }
 
-    private void reassignTilesClickEvent() {
+    private void reassignTileClickEvent() {
         for (Tile[] rows : tiles)
             for (Tile tile : rows)
                 tile.setOnMouseClicked(mouseEvent ->
