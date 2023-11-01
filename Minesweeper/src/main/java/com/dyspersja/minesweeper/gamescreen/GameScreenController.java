@@ -107,22 +107,18 @@ public class GameScreenController {
     }
 
     private void updateTilesOnMouseClickAction() {
-        for (Node node : minefieldGridPane.getChildren()) {
-            if (node instanceof Tile tile) {
-                tile.setOnMouseClicked(mouseEvent -> {
-                    tile.setOnMouseClicked(null);
-                    onTileClicked(tile);
-                });
-            }
-        }
+        for (Tile[] rows : tiles)
+            for (Tile tile : rows)
+                tile.setOnMouseClicked(mouseEvent ->
+                        onTileClicked(tile));
     }
 
     private void onTileClicked(Tile tile) {
         int row = GridPane.getRowIndex(tile);
         int column = GridPane.getColumnIndex(tile);
 
-        if(!tiles[row][column].isBomb()) {
-            tiles[row][column].setRevealed(true);
+        if(!tile.isBomb()) {
+            tile.setRevealed(true);
 
             int adjacentBombCount = getAdjacentBombCount(row,column);
             if (adjacentBombCount != 0)
@@ -132,51 +128,38 @@ public class GameScreenController {
     }
 
     private void revealAdjacentTiles(Tile tile, int row, int column) {
-        tile.reveal("", "#eeeeee");
+        tiles[row][column].reveal("", "#eeeeee");
 
-        for (Node node : minefieldGridPane.getChildren()) {
-            if (node instanceof Tile currentTile) {
-                int r = GridPane.getRowIndex(node);
-                int c = GridPane.getColumnIndex(node);
-                if (r >= row - 1 && r <= row + 1) {
-                    if (c >= column - 1 && c <= column + 1) {
-                        if (!tiles[r][c].isRevealed()) {
-                            tiles[r][c].setRevealed(true);
+        for (int i = -1; i <= 1; i++)
+            for (int j = -1; j <= 1; j++)
+                if (isValidTile(row+i, column+j))
+                    if (!tiles[row+i][column+j].isRevealed()) {
+                        tiles[row+i][column+j].setRevealed(true);
 
-                            int adjacentBombCount = getAdjacentBombCount(r,c);
-                            if (adjacentBombCount != 0)
-                                currentTile.reveal(Integer.toString(adjacentBombCount), "#eeeeee");
-                            else revealAdjacentTiles(currentTile, r, c);
-                        }
+                        int adjacentBombCount = getAdjacentBombCount(row+i,column+j);
+                        if (adjacentBombCount != 0)
+                            tiles[row+i][column+j].reveal(Integer.toString(adjacentBombCount), "#eeeeee");
+                        else revealAdjacentTiles(tiles[row+i][column+j], row+i, column+j);
                     }
-                }
-            }
-        }
     }
 
     private void revealAllBombTiles(Tile tile) {
-        for (Node node : minefieldGridPane.getChildren()) {
-            if (node instanceof Tile currentTile) {
-                int r = GridPane.getRowIndex(node);
-                int c = GridPane.getColumnIndex(node);
-                if (tiles[r][c].isBomb()) currentTile.reveal("X", "yellow");
-            }
-        }
+        for (Tile[] rows : tiles)
+            for (Tile currentTile : rows)
+                if (currentTile.isBomb())
+                    currentTile.reveal("X", "yellow");
+
         tile.reveal("X", "red");
     }
 
     private int getAdjacentBombCount(int row, int column) {
         int adjacentBombs = 0;
 
-        for(int i=-1;i<=1;i++){
-            for(int j=-1;j<=1;j++){
-                if(isValidTile(row+i,column+j)) {
-                    if(tiles[row+i][column+j].isBomb()) {
+        for (int i = -1; i <= 1; i++)
+            for (int j = -1; j <= 1; j++)
+                if (isValidTile(row+i, column+j))
+                    if (tiles[row+i][column+j].isBomb())
                         adjacentBombs++;
-                    }
-                }
-            }
-        }
 
         return adjacentBombs;
     }
