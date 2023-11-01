@@ -88,6 +88,8 @@ public class GameScreenController {
     private void onTileClicked(Tile tile) {
         if (tile.isBomb()) onGameLost(tile);
         else revealTile(tile);
+
+        if (checkIfGameWon()) onGameWon();
     }
 
     private void revealTile(Tile tile) {
@@ -107,11 +109,19 @@ public class GameScreenController {
                         revealTile(tiles[row+i][column+j]);
     }
 
+    private boolean checkIfGameWon() {
+        for (Tile[] rows : tiles)
+            for (Tile tile : rows)
+                if (!tile.isRevealed() && !tile.isBomb())
+                    return false;
+        return true;
+    }
+
     private void onGameWon() {
         for (Tile[] rows : tiles)
-            for (Tile currentTile : rows)
-                if (currentTile.isBomb())
-                    currentTile.reveal(TileStyle.BOMB_WON);
+            for (Tile tile : rows)
+                if (tile.isBomb())
+                    tile.reveal(TileStyle.BOMB_WON);
     }
 
     private void onGameLost(Tile tile) {
