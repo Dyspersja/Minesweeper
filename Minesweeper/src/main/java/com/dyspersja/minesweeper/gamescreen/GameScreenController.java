@@ -80,11 +80,10 @@ public class GameScreenController {
     }
 
     private void onTileClicked(Tile tile) {
-        if(!tile.isBomb()) {
-            if (tile.getAdjacentBombs() != 0)
-                tile.reveal("#eeeeee");
-            else revealAdjacentTiles(tile);
-        } else revealAllBombTiles(tile);
+        if (tile.isBomb()) onGameLost(tile);
+        else if (tile.getAdjacentBombs() == 0)
+            revealAdjacentTiles(tile);
+        else tile.reveal("#eeeeee");
     }
 
     private void revealAdjacentTiles(Tile tile) {
@@ -102,7 +101,14 @@ public class GameScreenController {
                     }
     }
 
-    private void revealAllBombTiles(Tile tile) {
+    private void onGameWon() {
+        for (Tile[] rows : tiles)
+            for (Tile currentTile : rows)
+                if (currentTile.isBomb())
+                    currentTile.reveal("green");
+    }
+
+    private void onGameLost(Tile tile) {
         for (Tile[] rows : tiles)
             for (Tile currentTile : rows)
                 if (currentTile.isBomb())
