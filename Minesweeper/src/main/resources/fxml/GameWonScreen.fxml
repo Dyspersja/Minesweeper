@@ -13,6 +13,6 @@
                 <Font size="24.0" />
             </font>
         </Label>
-        <Button fx:id="mainMenuButton" layoutX="63.0" layoutY="72.0" mnemonicParsing="false" text="Go to main menu" />
+        <Button fx:id="mainMenuButton" layoutX="63.0" layoutY="72.0" mnemonicParsing="false" onAction="#goToMainMenu" text="Go to main menu" />
     </children>
 </AnchorPane>

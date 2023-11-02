@@ -13,7 +13,7 @@
                 <Font size="24.0" />
             </font>
         </Label>
-        <Button fx:id="mainMenuButton" layoutX="98.0" layoutY="75.0" mnemonicParsing="false" text="Go to main menu" />
-      <Button fx:id="tryAgainButton" layoutX="26.0" layoutY="75.0" mnemonicParsing="false" text="Try again" />
+        <Button fx:id="mainMenuButton" layoutX="98.0" layoutY="75.0" mnemonicParsing="false" onAction="#goToMainMenu" text="Go to main menu" />
+      <Button fx:id="tryAgainButton" layoutX="26.0" layoutY="75.0" mnemonicParsing="false" onAction="#restartGame" text="Try again" />
     </children>
 </AnchorPane>
