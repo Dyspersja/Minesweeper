@@ -47,14 +47,7 @@ public class GameScreenController {
             stage.setScene(scene);
             stage.showAndWait();
         } catch (IllegalStateException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("Error");
-            alert.setHeaderText("Error loading FXML");
-            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
-
-            alert.showAndWait();
-            Platform.exit();
+            displayErrorWindow(e);
         }
     }
 
@@ -72,14 +65,18 @@ public class GameScreenController {
             stage.setScene(scene);
             stage.showAndWait();
         } catch (IllegalStateException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("Error");
-            alert.setHeaderText("Error loading FXML");
-            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
-
-            alert.showAndWait();
-            Platform.exit();
+            displayErrorWindow(e);
         }
+    }
+
+    private void displayErrorWindow(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setTitle("Error");
+        alert.setHeaderText("Error loading FXML");
+        alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
+
+        alert.showAndWait();
+        Platform.exit();
     }
 }
