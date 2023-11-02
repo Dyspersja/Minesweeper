@@ -1,10 +1,9 @@
 package com.dyspersja.minesweeper;
 
+import com.dyspersja.minesweeper.errorscreen.ErrorScreenProvider;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,14 +20,7 @@ public class MainApplication extends Application {
             stage.setScene(scene);
             stage.show();
         } catch (IllegalStateException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("Error");
-            alert.setHeaderText("Error loading FXML");
-            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
-
-            alert.showAndWait();
-            Platform.exit();
+            ErrorScreenProvider.displayErrorWindow(e);
         }
     }
 

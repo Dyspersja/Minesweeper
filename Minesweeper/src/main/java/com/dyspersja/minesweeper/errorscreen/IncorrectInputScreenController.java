@@ -1,4 +1,4 @@
-package com.dyspersja.minesweeper.welcomescreen.incorrectinput;
+package com.dyspersja.minesweeper.errorscreen;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

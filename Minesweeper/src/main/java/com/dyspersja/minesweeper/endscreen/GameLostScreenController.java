@@ -1,13 +1,12 @@
 package com.dyspersja.minesweeper.endscreen;
 
+import com.dyspersja.minesweeper.errorscreen.ErrorScreenProvider;
 import com.dyspersja.minesweeper.gamescreen.GameScreenController;
 import com.dyspersja.minesweeper.model.Difficulty;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -45,14 +44,7 @@ public class GameLostScreenController {
 
             mainStage.setScene(scene);
         } catch (IllegalStateException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("Error");
-            alert.setHeaderText("Error loading FXML");
-            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
-
-            alert.showAndWait();
-            Platform.exit();
+            ErrorScreenProvider.displayErrorWindow(e);
         }
         closeWindow();
     }
@@ -68,14 +60,7 @@ public class GameLostScreenController {
 
             mainStage.setScene(scene);
         } catch (IllegalStateException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("Error");
-            alert.setHeaderText("Error loading FXML");
-            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
-
-            alert.showAndWait();
-            Platform.exit();
+            ErrorScreenProvider.displayErrorWindow(e);
         }
         closeWindow();
     }
