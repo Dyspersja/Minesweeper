@@ -9,12 +9,20 @@ import java.util.Random;
 
 public class GameScreenLogic {
 
+    private final GameScreenController gameScreenController;
+
     private Tile[][] tiles;
     private final Difficulty difficulty;
     private final int gridHeight;
     private final int gridWidth;
 
-    public GameScreenLogic(Difficulty difficulty, int gridHeight, int gridWidth) {
+    public GameScreenLogic(
+            GameScreenController gameScreenController,
+            Difficulty difficulty,
+            int gridHeight,
+            int gridWidth
+    ) {
+        this.gameScreenController = gameScreenController;
         this.difficulty = difficulty;
         this.gridHeight = gridHeight;
         this.gridWidth = gridWidth;
@@ -114,6 +122,12 @@ public class GameScreenLogic {
             for (Tile tile : rows)
                 if (tile.isBomb())
                     tile.reveal(TileStyle.BOMB_WON);
+
+        displayGameWonWindow();
+    }
+
+    private void displayGameWonWindow() {
+        gameScreenController.displayGameWonWindow();
     }
 
     private void onGameLost(Tile tile) {
@@ -123,5 +137,11 @@ public class GameScreenLogic {
                     currentTile.reveal(TileStyle.BOMB_LOST);
 
         tile.reveal(TileStyle.BOMB_LOST_STRUCK);
+
+        displayGameLostWindow();
+    }
+
+    private void displayGameLostWindow() {
+        gameScreenController.displayGameLostWindow(difficulty, gridHeight, gridWidth);
     }
 }
