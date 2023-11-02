@@ -21,7 +21,7 @@ public class WelcomeScreenInputValidator {
     private boolean validateTextFieldInput(TextField textField, int min, int max) {
         try {
             int number = Integer.parseInt(textField.getText());
-            return number >= min && number < max;
+            return number >= min && number <= max;
         } catch (NumberFormatException e) {
             return false;
         }

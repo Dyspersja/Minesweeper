@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,7 +27,10 @@ public class WelcomeScreenController {
 
     @FXML
     void startGame(ActionEvent event) throws IOException {
-        if(!validateUserInput()) return;
+        if(!validateUserInput()) {
+            displayIncorrectInputWindow();
+            return;
+        }
 
         // load game board scene from FXML file
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameScreen.fxml"));
@@ -59,6 +63,21 @@ public class WelcomeScreenController {
         return  validator.validateHeightInput(heightTextField) &&
                 validator.validateWidthInput(widthTextField) &&
                 validator.validateDifficultyInput(difficultyChoiceBox);
+    }
+
+    private void displayIncorrectInputWindow(){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/IncorrectInputScreen.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(fxmlLoader.load());
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Incorrect Input");
+            stage.setResizable(false);
+
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IllegalStateException | IOException ignored) {}
     }
 }
 
