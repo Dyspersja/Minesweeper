@@ -1,9 +1,11 @@
 package com.dyspersja.minesweeper.endscreen;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -21,12 +23,22 @@ public class GameWonScreenController {
     }
 
     @FXML
-    void goToMainMenu(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/WelcomeScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+    void goToMainMenu(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/WelcomeScreen.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
 
-        mainStage.setScene(scene);
+            mainStage.setScene(scene);
+        } catch (IllegalStateException | IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
 
+            alert.setTitle("Error");
+            alert.setHeaderText("Error loading FXML");
+            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
+
+            alert.showAndWait();
+            Platform.exit();
+        }
         closeWindow();
     }
 

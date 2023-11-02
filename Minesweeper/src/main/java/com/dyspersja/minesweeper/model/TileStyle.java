@@ -15,6 +15,6 @@ public enum TileStyle {
 
     @Override
     public String toString() {
-        return color;
+        return this.color;
     }
 }

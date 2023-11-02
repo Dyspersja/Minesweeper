@@ -15,10 +15,10 @@ public enum Difficulty {
 
     @Override
     public String toString() {
-        return label;
+        return this.label;
     }
 
     public int getBombDensityFactor() {
-        return bombDensityFactor;
+        return this.bombDensityFactor;
     }
 }

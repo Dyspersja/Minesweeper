@@ -2,10 +2,12 @@ package com.dyspersja.minesweeper.welcomescreen;
 
 import com.dyspersja.minesweeper.gamescreen.GameScreenController;
 import com.dyspersja.minesweeper.model.Difficulty;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -26,26 +28,37 @@ public class WelcomeScreenController {
     private Button startGameButton;
 
     @FXML
-    void startGame(ActionEvent event) throws IOException {
-        if(!validateUserInput()) {
+    void startGame(ActionEvent event) {
+        if (!validateUserInput()) {
             displayIncorrectInputWindow();
             return;
         }
 
-        // load game board scene from FXML file
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameScreen.fxml"));
-        Stage stage = (Stage) startGameButton.getScene().getWindow();
-        Scene scene = new Scene(fxmlLoader.load());
+        try {
+            // load game board scene from FXML file
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameScreen.fxml"));
+            Stage stage = (Stage) startGameButton.getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load());
 
-        // pass user input to gameScreenController
-        GameScreenController gameScreenController = fxmlLoader.getController();
-        gameScreenController.initializeGameScreenController(
-                difficultyChoiceBox.getValue(),
-                Integer.parseInt(heightTextField.getText()),
-                Integer.parseInt(widthTextField.getText())
-        );
+            // pass user input to gameScreenController
+            GameScreenController gameScreenController = fxmlLoader.getController();
+            gameScreenController.initializeGameScreenController(
+                    difficultyChoiceBox.getValue(),
+                    Integer.parseInt(heightTextField.getText()),
+                    Integer.parseInt(widthTextField.getText())
+            );
 
-        stage.setScene(scene);
+            stage.setScene(scene);
+        } catch (IllegalStateException | IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+
+            alert.setTitle("Error");
+            alert.setHeaderText("Error loading FXML");
+            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
+
+            alert.showAndWait();
+            Platform.exit();
+        }
     }
 
     @FXML

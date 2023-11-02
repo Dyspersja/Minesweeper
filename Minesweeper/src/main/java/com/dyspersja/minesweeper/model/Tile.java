@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 
 public class Tile extends Label {
+
     private boolean isRevealed;
     private boolean isBomb;
     private int adjacentBombs;
