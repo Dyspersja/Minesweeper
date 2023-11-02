@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,38 +34,52 @@ public class GameScreenController {
     }
 
     public void displayGameWonWindow() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameWonScreen.fxml"));
-        Stage stage = new Stage();
         try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameWonScreen.fxml"));
+            Stage stage = new Stage();
             Scene scene = new Scene(fxmlLoader.load());
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Game Won");
+            stage.setResizable(false);
+            stage.setOnCloseRequest(event -> Platform.exit());
+
             stage.setScene(scene);
+            stage.showAndWait();
         } catch (IllegalStateException | IOException e) {
-            throw new RuntimeException(e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+
+            alert.setTitle("Error");
+            alert.setHeaderText("Error loading FXML");
+            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
+
+            alert.showAndWait();
+            Platform.exit();
         }
-
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Game Won");
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> Platform.exit());
-
-        stage.showAndWait();
     }
 
     public void displayGameLostWindow() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameLostScreen.fxml"));
-        Stage stage = new Stage();
         try {
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setScene(scene);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameLostScreen.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(fxmlLoader.load());
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Game Lost");
+            stage.setResizable(false);
+            stage.setOnCloseRequest(event -> Platform.exit());
+
+            stage.setScene(scene);
+            stage.showAndWait();
         } catch (IllegalStateException | IOException e) {
-            throw new RuntimeException(e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+
+            alert.setTitle("Error");
+            alert.setHeaderText("Error loading FXML");
+            alert.setContentText("An error occurred while loading the FXML file: " + e.getMessage());
+
+            alert.showAndWait();
+            Platform.exit();
         }
-
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Game Lost");
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> Platform.exit());
-
-        stage.showAndWait();
     }
 }
