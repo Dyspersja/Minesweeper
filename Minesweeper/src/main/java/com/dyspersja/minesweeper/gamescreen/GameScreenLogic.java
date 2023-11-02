@@ -114,6 +114,13 @@ public class GameScreenLogic {
             for (Tile tile : rows)
                 if (tile.isBomb())
                     tile.reveal(TileStyle.BOMB_WON);
+
+        displayGameWonWindow();
+    }
+
+    private void displayGameWonWindow() {
+        var controller = new GameScreenController();
+        controller.displayGameWonWindow();
     }
 
     private void onGameLost(Tile tile) {
@@ -123,5 +130,12 @@ public class GameScreenLogic {
                     currentTile.reveal(TileStyle.BOMB_LOST);
 
         tile.reveal(TileStyle.BOMB_LOST_STRUCK);
+
+        displayGameLostWindow();
+    }
+
+    private void displayGameLostWindow() {
+        var controller = new GameScreenController();
+        controller.displayGameLostWindow();
     }
 }
