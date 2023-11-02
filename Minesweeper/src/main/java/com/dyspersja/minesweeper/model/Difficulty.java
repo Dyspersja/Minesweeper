@@ -1,9 +1,9 @@
 package com.dyspersja.minesweeper.model;
 
 public enum Difficulty {
-    BEGINNER("Beginner",8),
-    INTERMEDIATE("Intermediate",7),
-    EXPERT("Expert",6);
+    BEGINNER("Beginner",11),
+    INTERMEDIATE("Intermediate",9),
+    EXPERT("Expert",7);
 
     private final String label;
     private final int bombDensityFactor;
