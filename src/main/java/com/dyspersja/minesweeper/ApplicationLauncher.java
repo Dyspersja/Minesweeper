@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainApplication extends Application {
+public class ApplicationLauncher extends Application {
 
     @Override
     public void start(Stage stage) {
@@ -24,7 +24,7 @@ public class MainApplication extends Application {
         }
     }
 
-    public static void main(String[] args) {
+    public void launchApplication() {
         launch();
     }
 }
